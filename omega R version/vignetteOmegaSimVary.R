@@ -19,22 +19,32 @@ for (i in 1:length(files.sources)) {
   source(paste0(c("./main/", files.sources[i]), collapse = ''))
 }
 
+library(plotly)
+
 #################################################################################
 ################ Simulate epidemic data from a sinusoidal R #####################
 
 # Length of simulated time series and true R
 nday = 200; tday = 1:nday
-R = 1.3 + 1.2*sin(4*(pi/180)*tday)
-
-# Time of serial interval change
-twchange = 100
+# Choose a simulation example
+simType = 1
+if(simType){
+  R = 1.3 + 1.2*sin(4*(pi/180)*tday)
+  # Time of serial interval change
+  twchange = 100
+} else{
+  R = rep(1, nday); R[1:60] = 2; R[61:90] = 0.5
+  R[91:180] = 1; R[181:nday] = 2
+  # Time of serial interval change
+  twchange = 50
+}
 
 # Standard Ferguson et al serial interval R assumes
 mean_si <- 6.5; sd_si <- 4.03; pms = c(0,0)
 pms[1] = mean_si^2/sd_si^2; pms[2] = sd_si^2/mean_si
 
 # Altered distribution due to some change
-mean_siv <- 6.5/2; sd_siv <- 4.03; pmsv = c(0,0)
+mean_siv <- 4; sd_siv <- 4.03; pmsv = c(0,0)
 pmsv[1] = mean_siv^2/sd_siv^2; pmsv[2] = sd_siv^2/mean_siv
 
 # Serial intervals from changing distributions
@@ -127,15 +137,15 @@ for (i in 1:nday){
 
 
 # Plot and save estimates and predictions from smoothing
-plotEpiFilter(Rsmooth$Rmean[2:nday], Rsmooth$Rci[, 2:nday], Ismooth$pred, Ismooth$predci,
-              'RSmoothVary', Iday[2:nday], folres, eta)
+plotEpiFilterSim(Rsmooth$Rmean[2:nday], Rsmooth$Rci[, 2:nday], Ismooth$pred, Ismooth$predci,
+              'RSmoothVary', Iday[2:nday], folres, eta, R[2:nday])
 
-plotEpiFilter(Omsmooth$Rmean[2:nday], Omsmooth$Rci[, 2:nday], IsmoothOm$pred, IsmoothOm$predci,
-              'OmSmoothVary', Iday[2:nday], folres, eta)
+plotEpiFilterSim(Omsmooth$Rmean[2:nday], Omsmooth$Rci[, 2:nday], IsmoothOm$pred, IsmoothOm$predci,
+              'OmSmoothVary', Iday[2:nday], folres, eta, R[2:nday])
 
-plotOmegaR(Rsmooth$Rmean[2:nday], Rsmooth$Rci[, 2:nday], Ismooth$pred, Ismooth$predci,
+plotOmegaRSim(Rsmooth$Rmean[2:nday], Rsmooth$Rci[, 2:nday], Ismooth$pred, Ismooth$predci,
            Omsmooth$Rmean[2:nday], Omsmooth$Rci[, 2:nday], IsmoothOm$pred, IsmoothOm$predci,
-           'compareROmegaVary', Iday[2:nday], folres, eta, delta)
+           'compareROmegaVary', Iday[2:nday], folres, eta, delta, R[2:nday])
 
 # Dates for plotting
 tdates = tday

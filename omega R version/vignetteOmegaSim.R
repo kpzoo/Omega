@@ -19,12 +19,20 @@ for (i in 1:length(files.sources)) {
   source(paste0(c("./main/", files.sources[i]), collapse = ''))
 }
 
+library(plotly)
+
 #################################################################################
 ################ Simulate epidemic data from a sinusoidal R #####################
 
 # Length of simulated time series and true R
 nday = 200; tday = 1:nday
-R = 1.3 + 1.2*sin(4*(pi/180)*tday)
+# Choose a simulation example
+simType = 0
+if(simType){
+  R = 1.3 + 1.2*sin(4*(pi/180)*tday)
+  } else{
+  R = rep(1, nday); R[1:60] = 2; R[61:90] = 0.5; R[91:nday] = 1
+}
 
 # Shape-scale parameters of gamma serial interval
 mean_si <- 6.5; sd_si <- 4.03; pms = c(0,0)
@@ -51,7 +59,7 @@ for(i in 2:nday){
 }
 
 # For window delta compute rmse infections
-Irms = rep(0, nday); delta = 10
+Irms = rep(0, nday); delta = 15
 for(i in 2:nday){
   # Edge effect cases
   if(i-1 < delta){
@@ -110,15 +118,15 @@ for (i in 1:nday){
 
 
 # Plot and save estimates and predictions from smoothing
-plotEpiFilter(Rsmooth$Rmean[2:nday], Rsmooth$Rci[, 2:nday], Ismooth$pred, Ismooth$predci,
-              'RSmooth', Iday[2:nday], folres, eta)
+plotEpiFilterSim(Rsmooth$Rmean[2:nday], Rsmooth$Rci[, 2:nday], Ismooth$pred, Ismooth$predci,
+              'RSmooth', Iday[2:nday], folres, eta, R[2:nday])
 
-plotEpiFilter(Omsmooth$Rmean[2:nday], Omsmooth$Rci[, 2:nday], IsmoothOm$pred, IsmoothOm$predci,
-              'OmSmooth', Iday[2:nday], folres, eta)
+plotEpiFilterSim(Omsmooth$Rmean[2:nday], Omsmooth$Rci[, 2:nday], IsmoothOm$pred, IsmoothOm$predci,
+              'OmSmooth', Iday[2:nday], folres, eta, R[2:nday])
 
-plotOmegaR(Rsmooth$Rmean[2:nday], Rsmooth$Rci[, 2:nday], Ismooth$pred, Ismooth$predci,
+plotOmegaRSim(Rsmooth$Rmean[2:nday], Rsmooth$Rci[, 2:nday], Ismooth$pred, Ismooth$predci,
            Omsmooth$Rmean[2:nday], Omsmooth$Rci[, 2:nday], IsmoothOm$pred, IsmoothOm$predci,
-           'compareROmega', Iday[2:nday], folres, eta, delta)
+           'compareROmega', Iday[2:nday], folres, eta, delta, R[2:nday], 0)
 
 # Dates for plotting
 tdates = tday
