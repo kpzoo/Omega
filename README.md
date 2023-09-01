@@ -2,7 +2,7 @@
 
 Code to compute the angular reproduction number (Omega) and compare it to the effective reproduction number (R) and growth rate (r). The angular reproduction number provides estimates of transmissibility that are more robust than standard approaches to misspecified or time-varying generation time distributions.
 
-Omega is introduced in the paper "Encoding generation time changes within reproduction numbers" by Kris V Parag, Benjamin Cowling and Ben C Lambert at medRxiv 2022.10.19.22281255; doi: https://doi.org/10.1101/2022.10.19.22281255.
+Omega is introduced in the paper "Angular reproduction numbers improve estimates of transmissibility when disease generation times are misspecified or time-varying" by Kris V Parag, Benjamin Cowling and Ben C Lambert at medRxiv 2022.10.19.22281255; doi: https://doi.org/10.1101/2022.10.19.22281255. This has been accepted at Proceedings of the Royal Society B.
 
 System Requirements
 
